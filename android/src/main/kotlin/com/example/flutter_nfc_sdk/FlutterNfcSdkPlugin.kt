@@ -31,11 +31,16 @@ class FlutterNfcSdkPlugin : FlutterPlugin, MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
-            "searchCard" -> {
-                // Define the sunyardReadCard method or import it from the correct package
+            "initNFCFunction" -> {
+                val ndefMessage = call.argument<String>("ndefMessage")
+                initNFCFunction(ndefMessage!!)
+                result.success()
             }
-            "getPlatformVersion" -> {
-                result.success("Android ${android.os.Build.VERSION.RELEASE}")
+            "supportNfcHceFeature" -> {
+                result.success(supportNfcHceFeature())
+            }
+            "checkNFCEnable" -> {
+                result.success(checkNFCEnable())
             }
 
             else -> {
@@ -59,7 +64,6 @@ class FlutterNfcSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun supportNfcHceFeature() =
-        // Define the checkNFCEnable method or import it from the correct package
         checkNFCEnable() && context.packageManager.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)
 
     private fun checkNFCEnable(): Boolean {
@@ -74,7 +78,7 @@ class FlutterNfcSdkPlugin : FlutterPlugin, MethodCallHandler {
         if (TextUtils.isEmpty(ndefMessage)) {
             Toast.makeText(
                 context,
-                "please write something in editText",
+                "please write something in the text field!",
                 Toast.LENGTH_LONG,
             ).show()
         } else {

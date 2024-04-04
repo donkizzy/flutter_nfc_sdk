@@ -9,9 +9,31 @@ class MethodChannelFlutterNfcSdk extends FlutterNfcSdkPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_nfc_sdk');
 
-  @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<void> initNFCFunction(String ndefMessage) async {
+    try {
+      await methodChannel.invokeMethod('initNFCFunction', {'ndefMessage': ndefMessage});
+    } catch (e) {
+      print('Failed to initialize NFC function: $e');
+    }
+  }
+
+  Future<bool> supportNfcHceFeature() async {
+    try {
+      final bool isSupported = await methodChannel.invokeMethod('supportNfcHceFeature');
+      return isSupported;
+    } catch (e) {
+      print('Failed to check NFC HCE feature support: $e');
+      return false;
+    }
+  }
+
+  Future<bool> checkNFCEnable() async {
+    try {
+      final bool isEnabled = await methodChannel.invokeMethod('checkNFCEnable');
+      return isEnabled;
+    } catch (e) {
+      print('Failed to check if NFC is enabled: $e');
+      return false;
+    }
   }
 }
